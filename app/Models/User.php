@@ -58,4 +58,11 @@ class User extends Authenticatable
     public function records() {
         return $this->hasMany(UserRecord::class);
     }
+
+    /**
+     * @return string
+     */
+    public function makeToken() {
+        return $this->createToken('access_token')->accessToken;
+    }
 }

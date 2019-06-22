@@ -16,16 +16,19 @@ $router = resolve('router');
 /**
  * No authorization required
  */
-$router->group([], function () use ($router) {
-    $router->group(['prefix' => '/identity'], function () use ($router) {
-        $router->post('/', 'Api\IdentityController@store');
+$router->group(['prefix' => '/identity'], function () use ($router) {
+    $router->post('/', 'Api\IdentityController@store');
 
-        /**
-         * Record types
-         */
-        $router->group(['prefix' => '/record-types'], function () use ($router) {
-            $router->get('/', 'Api\Identity\RecordTypeController@index');
-        });
+    $router->group(['prefix' => '/proxy'], function() use ($router) {
+        $router->post('/token', 'Api\IdentityController@proxyAuthorizationToken');
+        $router->get('/token/check/{checkToken}', 'Api\IdentityController@proxyCheckToken');
+    });
+
+    /**
+     * Record types
+     */
+    $router->group(['prefix' => '/record-types'], function () use ($router) {
+        $router->get('/', 'Api\Identity\RecordTypeController@index');
     });
 });
 
@@ -35,6 +38,13 @@ $router->group([], function () use ($router) {
 $router->group(['middleware' => ['auth:api']], function () use ($router) {
     $router->group(['prefix' => '/identity'], function () use ($router) {
         $router->get('/', 'Api\IdentityController@getPublic');
+
+        /**
+         * Identity proxies
+         */
+        $router->group(['prefix' => '/proxy/authorize'], function() use ($router) {
+            $router->post('/token', 'Api\IdentityController@proxyAuthorizeToken');
+        });
 
         /**
          * Record categories

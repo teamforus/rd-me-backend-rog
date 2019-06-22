@@ -83,7 +83,7 @@ class IdentityController extends Controller
             'auth_token' => $token_generator->generate(128),
             'check_token' => $token_generator->generate(512),
         ])->only([
-            'auth_token', 'check_token'
+            'auth_token', 'check_token', 'confirmed'
         ]);
     }
 
@@ -113,6 +113,22 @@ class IdentityController extends Controller
     }
 
     /**
+     * @param $authToken
+     * @return array
+     */
+    public function proxyConfirmShareToken(
+        $authToken
+    ) {
+        $qrToken = QrToken::findByAuthToken($authToken) ?? abort(404);
+
+        return [
+            'success' => $qrToken->update([
+                'confirmed' => true
+            ])
+        ];
+    }
+
+    /**
      * @param IdentityAuthorizeCheckTokenRequest $request
      * @param $checkToken
      * @return array
@@ -130,7 +146,9 @@ class IdentityController extends Controller
             abort(404);
         }
 
-        return $qrToken->only('access_token');
+        return $qrToken->only([
+            'access_token', 'confirmed'
+        ]);
     }
 
     /**

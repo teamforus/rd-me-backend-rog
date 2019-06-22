@@ -11,6 +11,7 @@ use Carbon\Carbon;
  * @property string $auth_token
  * @property string $check_token
  * @property string $access_token
+ * @property boolean $confirmed
  * @property User $user
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -19,7 +20,7 @@ use Carbon\Carbon;
 class QrToken extends \App\Models\Model
 {
     protected $fillable = [
-        'auth_token', 'user_id', 'access_token', 'check_token'
+        'auth_token', 'user_id', 'access_token', 'check_token', 'confirmed',
     ];
 
     /**

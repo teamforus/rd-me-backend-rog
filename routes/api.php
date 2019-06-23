@@ -42,8 +42,9 @@ $router->group(['middleware' => ['auth:api']], function () use ($router) {
         /**
          * Identity proxies
          */
-        $router->group(['prefix' => '/proxy/authorize'], function() use ($router) {
-            $router->post('/token', 'Api\IdentityController@proxyAuthorizeToken');
+        $router->group(['prefix' => '/proxy'], function() use ($router) {
+            $router->post('/authorize/token', 'Api\IdentityController@proxyAuthorizeToken');
+            $router->post('/authorize/token/confirm/{authToken}', 'Api\IdentityController@proxyConfirmShareToken');
             $router->post('/token/confirm/{authToken}', 'Api\IdentityController@proxyConfirmShareToken');
         });
 
